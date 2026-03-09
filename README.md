@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 代办事项应用
 
-## Getting Started
+一个基于 Next.js + TypeScript 的简单代办事项管理应用。
 
-First, run the development server:
+## 功能特性
 
+- ✅ 添加新的代办事项
+- ✅ 标记事项为完成/未完成
+- ✅ 编辑事项内容
+- ✅ 删除事项
+- ✅ 过滤显示（全部/未完成/已完成）
+- ✅ 清除所有已完成事项
+- ✅ 本地存储持久化
+- ✅ 响应式设计
+
+## 技术栈
+
+- Next.js 14 (App Router)
+- TypeScript
+- React Hooks
+- Tailwind CSS
+- Local Storage
+
+## 快速开始
+
+1. 安装依赖：
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. 启动开发服务器：
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. 在浏览器中打开 [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 项目结构
 
-## Learn More
+```
+src/
+├── app/
+│   ├── page.tsx          # 主页面
+│   └── layout.tsx        # 应用布局
+├── components/
+│   ├── TodoForm.tsx      # 添加事项表单
+│   ├── TodoList.tsx      # 事项列表
+│   ├── TodoItem.tsx      # 单个事项组件
+│   └── TodoFilter.tsx    # 过滤组件
+├── hooks/
+│   └── useTodos.ts       # 自定义 Hook
+└── types/
+    └── todo.ts           # TypeScript 类型定义
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 使用说明
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **添加事项**: 在顶部输入框中输入事项内容，点击"添加"按钮
+2. **标记完成**: 点击事项左侧的圆圈图标
+3. **编辑事项**: 点击事项文本进行编辑
+4. **删除事项**: 点击事项右侧的删除图标
+5. **过滤事项**: 使用顶部的过滤按钮查看不同状态的事项
+6. **清除已完成**: 点击"清除已完成"按钮删除所有已完成事项
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 数据存储
 
-## Deploy on Vercel
+所有数据都保存在浏览器的本地存储中，刷新页面后数据不会丢失。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 构建部署
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# 构建生产版本
+npm run build
+
+# 启动生产服务器
+npm start
+```
