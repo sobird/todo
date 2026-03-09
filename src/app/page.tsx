@@ -17,7 +17,9 @@ export default function Home() {
     clearCompleted,
     activeCount,
     completedCount,
-    totalCount
+    totalCount,
+    loading,
+    error
   } = useTodos();
 
   return (
@@ -66,12 +68,29 @@ export default function Home() {
 
         {/* 代办事项列表 */}
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <TodoList
-            todos={todos}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
-            onEdit={editTodo}
-          />
+          {loading && todos.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">加载中...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <div className="text-red-500 mb-4">
+                <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-lg font-medium">加载失败</p>
+                <p className="text-sm">{error}</p>
+              </div>
+            </div>
+          ) : (
+            <TodoList
+              todos={todos}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+              onEdit={editTodo}
+            />
+          )}
         </div>
 
         {/* 底部提示 */}
