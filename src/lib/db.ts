@@ -1,28 +1,21 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import fs from 'fs';
+import sequelize from './sequelize';
+import models from '../models';
 
-// 确保数据库目录存在
-const dbDir = path.join(process.cwd(), 'data');
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+// 同步数据库并创建表
+async function syncDatabase() {
+  try {
+    await sequelize.sync({ alter: true }); // 生产环境应使用 migrate
+    console.log('Database synchronized');
+  } catch (error) {
+    console.error('Error syncing database:', error);
+  }
 }
 
-// 数据库文件路径
-const dbPath = path.join(dbDir, 'todos.db');
+// 在应用启动时同步数据库
+syncDatabase();
 
-// 创建数据库连接
-const db = new Database(dbPath);
-
-// 初始化数据库表
-db.exec(`
-  CREATE TABLE IF NOT EXISTS todos (
-    id TEXT PRIMARY KEY,
-    text TEXT NOT NULL,
-    completed BOOLEAN DEFAULT FALSE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-`);
+// 导出模型和数据库连接
+export { sequelize, models };
 
 // 准备 SQL 语句
 const statements = {
