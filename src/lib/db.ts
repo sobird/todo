@@ -1,127 +1,110 @@
 import sequelize from './sequelize';
 import models from '../models';
 
-// 同步数据库并创建表
-async function syncDatabase() {
-  try {
-    await sequelize.sync({ alter: true }); // 生产环境应使用 migrate
-    console.log('Database synchronized');
-  } catch (error) {
-    console.error('Error syncing database:', error);
+// 数据库连接状态管理
+class DatabaseManager {
+  private static instance: DatabaseManager;
+  private isConnected = false;
+
+  public get sequelize() {
+    return sequelize;
+  }
+
+  public get models() {
+    return models;
+  }
+
+  // 检查数据库连接状态
+  public async isConnected(): Promise<boolean> {
+    try {
+      if (!this.isConnected) {
+        await sequelize.authenticate();
+        this.isConnected = true;
+      }
+      return true;
+    } catch (error) {
+      console.error('Database connection error:', error);
+      return false;
+    }
+  }
+
+  // 同步数据库表结构
+  public async sync(options: { force?: boolean; alter?: boolean } = {}) {
+    try {
+      await sequelize.sync(options);
+      console.log('✅ Database synchronized successfully');
+    } catch (error) {
+      console.error('❌ Database synchronization failed:', error);
+      throw error;
+    }
+  }
+
+  // 获取所有模型
+  public getAllModels() {
+    return models;
+  }
+
+  // 事务管理
+  public async transaction<T>(
+    fn: (transaction: any) => Promise<T>
+  ): Promise<T> {
+    const transaction = await sequelize.transaction();
+    try {
+      const result = await fn(transaction);
+      await transaction.commit();
+      return result;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  // 批量操作
+  public async batchOperation<T>(
+    operations: Array<() => Promise<T>>
+  ): Promise<T[]> {
+    const results: T[] = [];
+    for (const operation of operations) {
+      try {
+        const result = await operation();
+        results.push(result);
+      } catch (error) {
+        console.error('Batch operation failed:', error);
+        throw error;
+      }
+    }
+    return results;
+  }
+
+  // 数据库健康检查
+  public async healthCheck(): Promise<{
+    status: 'healthy' | 'unhealthy';
+    message: string;
+    timestamp: Date;
+  }> {
+    try {
+      const startTime = Date.now();
+      await sequelize.authenticate();
+      const endTime = Date.now();
+
+      return {
+        status: 'healthy',
+        message: `Connection established in ${endTime - startTime}ms`,
+        timestamp: new Date()
+      };
+    } catch (error) {
+      return {
+        status: 'unhealthy',
+        message: `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        timestamp: new Date()
+      };
+    }
   }
 }
 
-// 在应用启动时同步数据库
-syncDatabase();
+// 导出单例实例
+export default new DatabaseManager();
 
-// 导出模型和数据库连接
+// 导出常用模型和函数
 export { sequelize, models };
-
-// 准备 SQL 语句
-const statements = {
-  // 获取所有 todos
-  getAllTodos: db.prepare(`
-    SELECT id, text, completed, created_at as createdAt
-    FROM todos
-    ORDER BY created_at DESC
-  `),
-
-  // 根据过滤条件获取 todos
-  getFilteredTodos: db.prepare(`
-    SELECT id, text, completed, created_at as createdAt
-    FROM todos
-    WHERE
-      CASE ?
-        WHEN 'active' THEN completed = 0
-        WHEN 'completed' THEN completed = 1
-        ELSE 1=1
-      END
-    ORDER BY created_at DESC
-  `),
-
-  // 创建新 todo
-  createTodo: db.prepare(`
-    INSERT INTO todos (id, text, completed, created_at)
-    VALUES (?, ?, ?, ?)
-  `),
-
-  // 更新 todo
-  updateTodo: db.prepare(`
-    UPDATE todos
-    SET text = ?, completed = ?
-    WHERE id = ?
-  `),
-
-  // 删除 todo
-  deleteTodo: db.prepare(`
-    DELETE FROM todos
-    WHERE id = ?
-  `),
-
-  // 清除已完成的 todos
-  clearCompleted: db.prepare(`
-    DELETE FROM todos
-    WHERE completed = 1
-  `),
-
-  // 获取统计信息
-  getStats: db.prepare(`
-    SELECT
-      COUNT(*) as total,
-      COUNT(CASE WHEN completed = 0 THEN 1 END) as active,
-      COUNT(CASE WHEN completed = 1 THEN 1 END) as completed
-    FROM todos
-  `)
-};
-
-export interface TodoRow {
-  id: string;
-  text: string;
-  completed: number; // SQLite 返回数字
-  createdAt: string;
-}
-
-export interface TodoStats {
-  total: number;
-  active: number;
-  completed: number;
-}
-
-export const dbOperations = {
-  // 获取所有 todos
-  getAllTodos: (): TodoRow[] => {
-    return statements.getAllTodos.all() as TodoRow[];
-  },
-
-  // 根据过滤条件获取 todos
-  getFilteredTodos: (filter: string): TodoRow[] => {
-    return statements.getFilteredTodos.all(filter) as TodoRow[];
-  },
-
-  // 创建新 todo
-  createTodo: (id: string, text: string, createdAt: Date) => {
-    return statements.createTodo.run(id, text, 0, createdAt.toISOString());
-  },
-
-  // 更新 todo
-  updateTodo: (id: string, text: string, completed: boolean) => {
-    return statements.updateTodo.run(text, completed ? 1 : 0, id);
-  },
-
-  // 删除 todo
-  deleteTodo: (id: string) => {
-    return statements.deleteTodo.run(id);
-  },
-
-  // 清除已完成的 todos
-  clearCompleted: () => {
-    return statements.clearCompleted.run();
-  },
-
-  // 获取统计信息
-  getStats: (): TodoStats => {
-    return statements.getStats.get() as TodoStats;
-  }
-};
-
-export default db;
+export type { TodoAttributes, TodoCreationAttributes } from '../models/Todo';
