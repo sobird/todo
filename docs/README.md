@@ -33,6 +33,9 @@ docs/
 ### 🗄 **数据库文档**
 - [SQLITE_SETUP.md](SQLITE_SETUP.md) - SQLite 数据库的详细设置和操作指南
 
+### 🚀 **部署指南**
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Vercel 生产环境部署完整指南
+
 ### 🔄 **数据迁移**
 - [data-migration-script.js](data-migration-script.js) - LocalStorage 到 SQLite 的数据迁移脚本
 
@@ -105,8 +108,9 @@ pnpm build
 2. **SQLite 相关问题**: 查看 [SQLITE_SETUP.md](SQLITE_SETUP.md)
 3. **pnpm 配置问题**: 查看 [PNPM_SETUP.md](PNPM_SETUP.md)
 4. **数据迁移问题**: 查看 [data-migration-script.js](data-migration-script.js)
-5. **部署问题**: 查看 [README.md] 中的部署指南
-6. **GitHub Issues**: 查看项目 Issue 列表
+5. **部署问题**: 查看 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) (Vercel 部署指南)
+6. **项目概览**: 查看 [SUMMARY.md](SUMMARY.md)
+7. **GitHub Issues**: 查看项目 Issue 列表
 
 ---
 
