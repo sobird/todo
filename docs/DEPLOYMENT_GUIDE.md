@@ -4,8 +4,9 @@
 
 - **项目名称**: Todo App (代办事项应用)
 - **当前版本**: v1.0 (生产就绪)
-- **技术栈**: Next.js 16.1.6 + React 19 + TypeScript + SQLite + pnpm
-- **部署状态**: ✅ 准备就绪
+- **技术栈**: Next.js 16.1.6 + React 19 + TypeScript + pnpm
+- **数据库**: PostgreSQL (Vercel Postgres) - 即将迁移
+- **部署状态**: ⚠️ 需要数据库迁移
 
 ## 🎯 部署目标
 

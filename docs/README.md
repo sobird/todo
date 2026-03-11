@@ -31,7 +31,8 @@ docs/
 - [PNPM_SETUP.md](PNPM_SETUP.md) - pnpm 10.30.3 的配置和使用指南
 
 ### 🗄 **数据库文档**
-- [SQLITE_SETUP.md](SQLITE_SETUP.md) - SQLite 数据库的详细设置和操作指南
+- [SQLITE_SETUP.md](SQLITE_SETUP.md) - SQLite 数据库的详细设置和操作指南 (本地开发)
+- [POSTGRES_SETUP.md](POSTGRES_SETUP.md) - PostgreSQL 数据库配置指南 (生产部署)
 
 ### 🚀 **部署指南**
 - [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Vercel 生产环境部署完整指南
