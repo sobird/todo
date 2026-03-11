@@ -33,9 +33,9 @@ describe('Todo Model Associations', () => {
     // 验证字段类型
     const fields = Todo.rawAttributes;
 
-    expect(fields.id.type.toString()).toContain('STRING');
+    expect(fields.id.type.toString()).toMatch(/STRING|VARCHAR/);
     expect(fields.text.type.toString()).toContain('TEXT');
-    expect(fields.completed.type.toString()).toContain('BOOLEAN');
+    expect(fields.completed.type.toString()).toMatch(/BOOLEAN|TINYINT/);
     expect(fields.createdAt.type.toString()).toContain('DATE');
 
     // 验证约束

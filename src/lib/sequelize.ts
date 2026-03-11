@@ -8,9 +8,19 @@ if (!databaseUrl) {
   throw new Error('DATABASE_URL or POSTGRES_URL environment variable is required');
 }
 
+// 根据URL自动检测方言
+const getDialectFromUrl = (url: string): string => {
+  if (url.startsWith('sqlite:')) {
+    return 'sqlite';
+  }
+  return 'postgres'; // 默认使用PostgreSQL
+};
+
+const dialect = getDialectFromUrl(databaseUrl);
+
 // 创建 Sequelize 实例
 const sequelize = new Sequelize(databaseUrl, {
-  dialect: 'postgres',
+  dialect: dialect as any,
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
   pool: {
     max: 5,
@@ -18,17 +28,22 @@ const sequelize = new Sequelize(databaseUrl, {
     acquire: 30000,
     idle: 10000
   },
-  // PostgreSQL 特定配置
-  ssl: isProduction ? { rejectUnauthorized: false } : false,
-  dialectOptions: {
-    // 生产环境的 SSL 配置
-    ...(isProduction && {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    })
-  },
+  // 数据库特定配置
+  ...(dialect === 'sqlite' ? {
+    storage: databaseUrl.replace('sqlite:', ''),
+    logging: process.env.NODE_ENV === 'development' ? console.log : false
+  } : {
+    ssl: isProduction ? { rejectUnauthorized: false } : false,
+    dialectOptions: {
+      // 生产环境的 SSL 配置
+      ...(isProduction && {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      })
+    }
+  }),
   // 连接重试配置
   retry: {
     match: [

@@ -4,7 +4,7 @@ import models from '../models';
 // 数据库连接状态管理
 class DatabaseManager {
   private static instance: DatabaseManager;
-  private isConnected = false;
+  private _isConnected = false;
 
   public get sequelize() {
     return sequelize;
@@ -17,9 +17,9 @@ class DatabaseManager {
   // 检查数据库连接状态
   public async isConnected(): Promise<boolean> {
     try {
-      if (!this.isConnected) {
+      if (!this._isConnected) {
         await sequelize.authenticate();
-        this.isConnected = true;
+        this._isConnected = true;
       }
       return true;
     } catch (error) {

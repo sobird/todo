@@ -175,11 +175,13 @@ describe('Todos API Integration Tests', () => {
     }
 
     const expectedErrorResponse: ErrorResponse = {
-      error: expect.stringContaining('Failed'),
+      error: 'Operation Failed',
       status: 500
     };
 
     expect(expectedErrorResponse.status).toBe(500);
-    expect(expectedErrorResponse.error).toMatch(/Failed/);
+    // The error field should be a string containing 'Failed'
+    expect(typeof expectedErrorResponse.error).toBe('string');
+    expect(expectedErrorResponse.error).toContain('Failed');
   });
 });
