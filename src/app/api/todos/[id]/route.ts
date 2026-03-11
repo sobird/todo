@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbOperations } from '@/lib/db';
-import { Todo } from '@/types/todo';
+import DatabaseManager from '@/lib/db';
 
 // PUT /api/todos/[id]
 export async function PUT(
@@ -8,6 +7,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const db = DatabaseManager;
+    await db.isConnected();
+
     const resolvedParams = await params;
     const id = resolvedParams.id;
     const { text, completed } = await request.json();
@@ -34,22 +36,24 @@ export async function PUT(
       );
     }
 
-    // 更新数据库
+    // 查找并更新 todo
+    const todo = await db.models.Todo.findByPk(id);
+    if (!todo) {
+      return NextResponse.json(
+        { error: 'Todo not found' },
+        { status: 404 }
+      );
+    }
+
+    // 准备更新数据
     const updateData: { text?: string; completed?: boolean } = {};
     if (text !== undefined) updateData.text = text.trim();
     if (completed !== undefined) updateData.completed = completed;
 
-    dbOperations.updateTodo(id, updateData.text || '', updateData.completed || false);
+    // 应用更新
+    await todo.update(updateData);
 
-    // 返回更新后的 todo（这里简化处理，实际应用中可能需要重新查询）
-    const updatedTodo: Todo = {
-      id,
-      text: updateData.text || '',
-      completed: updateData.completed || false,
-      createdAt: new Date() // 这里应该从数据库获取实际时间
-    };
-
-    return NextResponse.json(updatedTodo);
+    return NextResponse.json(todo);
   } catch (error) {
     console.error('Error updating todo:', error);
     return NextResponse.json(
@@ -65,6 +69,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const db = DatabaseManager;
+    await db.isConnected();
+
     const resolvedParams = await params;
     const id = resolvedParams.id;
 
@@ -75,7 +82,16 @@ export async function DELETE(
       );
     }
 
-    dbOperations.deleteTodo(id);
+    // 查找并删除 todo
+    const todo = await db.models.Todo.findByPk(id);
+    if (!todo) {
+      return NextResponse.json(
+        { error: 'Todo not found' },
+        { status: 404 }
+      );
+    }
+
+    await todo.destroy();
 
     return NextResponse.json({ success: true });
   } catch (error) {
