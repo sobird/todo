@@ -58,7 +58,10 @@ export async function POST(request: NextRequest) {
     }
 
     const newTodo = await db.models.Todo.create({
-      text: text.trim()
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      text: text.trim(),
+      completed: false,
+      createdAt: new Date()
     });
 
     return NextResponse.json(newTodo, { status: 201 });
