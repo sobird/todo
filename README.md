@@ -15,22 +15,22 @@
 
 ## 技术栈
 
-- Next.js 14 (App Router)
-- TypeScript
-- React Hooks
+- Next.js 16.1.6 (App Router)
+- TypeScript + React 19
+- SQLite + better-sqlite3
 - Tailwind CSS
-- Local Storage
+- pnpm 10.30.3
 
 ## 快速开始
 
 1. 安装依赖：
 ```bash
-npm install
+pnpm install
 ```
 
 2. 启动开发服务器：
 ```bash
-npm run dev
+pnpm dev
 ```
 
 3. 在浏览器中打开 [http://localhost:3000](http://localhost:3000)
@@ -64,7 +64,7 @@ src/
 
 ## 数据存储
 
-所有数据都保存在浏览器的本地存储中，刷新页面后数据不会丢失。
+所有数据都保存在 SQLite 数据库中，支持更可靠的数据持久化和复杂查询。
 
 ## 构建部署
 

@@ -46,11 +46,11 @@ todo-app/
 
 ## 🎯 技术栈
 
-- **框架**: Next.js 14 (App Router)
-- **语言**: TypeScript
+- **框架**: Next.js 16.1.6 (App Router)
+- **语言**: TypeScript + React 19
+- **数据库**: SQLite + better-sqlite3
 - **样式**: Tailwind CSS
-- **状态管理**: React Hooks (useState, useEffect)
-- **存储**: Browser localStorage
+- **包管理**: pnpm 10.30.3
 - **构建工具**: Turbopack
 
 ## 🚀 快速开始
@@ -60,16 +60,16 @@ todo-app/
 cd todo-app
 
 # 安装依赖 (首次运行)
-npm install
+pnpm install
 
 # 启动开发服务器
-npm run dev
+pnpm dev
 
 # 构建生产版本
-npm run build
+pnpm build
 
 # 启动生产服务器
-npm start
+pnpm start
 ```
 
 访问: [http://localhost:3000](http://localhost:3000)
@@ -110,7 +110,7 @@ npm start
 ### Vercel 部署 (推荐)
 ```bash
 # 安装 Vercel CLI
-npm install -g vercel
+pnpm add -g vercel
 
 # 部署到 Vercel
 vercel

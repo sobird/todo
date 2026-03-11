@@ -6,7 +6,7 @@
 
 ```bash
 cd todo-app
-npm run dev
+pnpm dev
 ```
 
 打开浏览器访问: [http://localhost:3000](http://localhost:3000)
