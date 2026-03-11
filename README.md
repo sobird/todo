@@ -70,8 +70,19 @@ src/
 
 ```bash
 # 构建生产版本
-npm run build
+pnpm build
 
 # 启动生产服务器
-npm start
+pnpm start
+
+# 启动开发服务器
+pnpm dev
 ```
+
+## 📚 **文档中心**
+
+- [docs/README.md](docs/README.md) - 完整的项目文档导航
+- [docs/SUMMARY.md](docs/SUMMARY.md) - 项目完成总结
+- [docs/UPGRADE.md](docs/UPGRADE.md) - 技术栈升级记录
+- [docs/SQLITE_SETUP.md](docs/SQLITE_SETUP.md) - SQLite 数据库设置指南
+- [docs/PNPM_SETUP.md](docs/PNPM_SETUP.md) - pnpm 包管理器配置指南
