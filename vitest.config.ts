@@ -12,6 +12,11 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
+    env: {
+      NODE_ENV: 'test',
+      DATABASE_URL: 'sqlite::memory:',
+      POSTGRES_URL: 'sqlite::memory:',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
